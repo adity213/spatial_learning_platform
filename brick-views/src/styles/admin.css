@@ -67,6 +67,42 @@
   margin-bottom: 16px;
 }
 
+.admin-bulk-add {
+  margin-bottom: 16px;
+}
+
+.admin-bulk-add summary {
+  cursor: pointer;
+  color: var(--quiet);
+  font-size: var(--font-size-sm);
+  margin-bottom: 8px;
+}
+
+.admin-bulk-add form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.admin-bulk-textarea {
+  width: 100%;
+  max-width: 360px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background-color: var(--sheet);
+  color: var(--ink);
+  resize: vertical;
+}
+
+.admin-bulk-results {
+  margin-top: 12px;
+  max-width: 360px;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;

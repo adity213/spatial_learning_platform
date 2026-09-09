@@ -9,7 +9,10 @@ import type { Puzzle } from "../src/core/types.js";
  *  Cached at Vercel's edge rather than fetched per player: the catalogue
  *  changes only when a teacher edits it, but every child loads it. s-maxage
  *  keeps it warm at the edge node nearest the child (so no trip to the
- *  database's us-east-1 region), and stale-while-revalidate means an expiry
+ *  database's us-east-1 region) across a classroom-sized burst of
+ *  concurrent requests, while staying short enough that an admin's edit
+ *  reaches players within seconds — a longer s-maxage=300 measured at ~5
+ *  minutes worst case in practice. stale-while-revalidate means an expiry
  *  never makes a child wait — they get the cached copy while it refreshes
  *  behind them. */
 async function handler(req: Request) {
@@ -39,7 +42,7 @@ async function handler(req: Request) {
     const cacheControl =
       process.env.NODE_ENV === "development"
         ? "no-cache"
-        : "public, s-maxage=300, stale-while-revalidate=86400";
+        : "public, s-maxage=20, stale-while-revalidate=86400";
 
     return Response.json(
       { puzzles: catalogue },

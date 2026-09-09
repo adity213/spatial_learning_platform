@@ -84,6 +84,10 @@ export function fetchParticipantDetail(id: string): Promise<ParticipantDetail> {
   return adminFetch(`/api/admin/participant?id=${encodeURIComponent(id)}`);
 }
 
+export function deleteParticipant(id: string): Promise<{ success: true }> {
+  return adminFetch(`/api/admin/participants?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+}
+
 export interface PuzzleSummary {
   id: string;
   name: string;

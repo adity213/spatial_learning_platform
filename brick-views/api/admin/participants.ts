@@ -1,6 +1,6 @@
-import { sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { db } from "../../src/db/index.js";
-import { participants } from "../../src/db/schema.js";
+import { attempts, hintUsages, participants, sessions } from "../../src/db/schema.js";
 import { requireAdmin } from "./_auth.js";
 
 // Excludes visually ambiguous characters (0/O, 1/I/L) so a code is easy to
@@ -102,6 +102,35 @@ async function handler(req: Request) {
       }
     }
     return Response.json({ error: "Could not generate a unique access code, try again" }, { status: 500 });
+  }
+
+  if (req.method === "DELETE") {
+    const id = new URL(req.url).searchParams.get("id");
+    if (!id) {
+      return Response.json({ error: "Missing id" }, { status: 400 });
+    }
+
+    // No ON DELETE CASCADE in the schema, and the neon-http driver doesn't
+    // support multi-statement transactions — delete children first, in FK
+    // order, so a participant with history doesn't hit a foreign key error.
+    const theirSessions = await db
+      .select({ id: sessions.id })
+      .from(sessions)
+      .where(eq(sessions.participantId, id));
+    const sessionIds = theirSessions.map((s) => s.id);
+
+    if (sessionIds.length > 0) {
+      await db.delete(hintUsages).where(inArray(hintUsages.sessionId, sessionIds));
+      await db.delete(attempts).where(inArray(attempts.sessionId, sessionIds));
+      await db.delete(sessions).where(inArray(sessions.id, sessionIds));
+    }
+
+    const [deleted] = await db.delete(participants).where(eq(participants.id, id)).returning({ id: participants.id });
+    if (!deleted) {
+      return Response.json({ error: "Participant not found" }, { status: 404 });
+    }
+
+    return Response.json({ success: true });
   }
 
   return new Response("Method not allowed", { status: 405 });
