@@ -63,11 +63,22 @@ export function getRaycastCandidate(
     const hits = raycaster.intersectObjects(targets, true)
     if (!hits.length || !hits[0]) return null
 
-    // For placing, we find the (x,z) column that the ray hit, and stack on top of it.
-    // If the ray hit a vertical side face, point.x or point.z will be on a .5 boundary.
-    // In JS, Math.round(0.5) = 1, which correctly pushes the hit into the empty cell in front.
-    const x = Math.round(hits[0].point.x)
-    const z = Math.round(hits[0].point.z)
+    const hit = hits[0]
+    let px = hit.point.x
+    let pz = hit.point.z
+    
+    if (hit.object !== plateMesh && hit.face) {
+      const normalMatrix = new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld)
+      const worldNormal = hit.face.normal.clone().applyMatrix3(normalMatrix).normalize()
+      
+      // Push the point slightly outwards along the normal so it unambiguously rounds
+      // into the adjacent cell if we hit a side face, or stays in the same cell if we hit the top.
+      px += worldNormal.x * 0.1
+      pz += worldNormal.z * 0.1
+    }
+
+    const x = Math.round(px)
+    const z = Math.round(pz)
     
     return {
       type: 'plate',
