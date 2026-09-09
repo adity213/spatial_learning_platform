@@ -1,4 +1,4 @@
-import { PIECES } from "./pieces";
+import { PIECES } from "./pieces.js";
 import type { Placement, PieceTypeId, Rotation, Vec3 } from "./types";
 
 export function footprintFor(typeId: PieceTypeId, rotation: Rotation): { w: number; d: number } {

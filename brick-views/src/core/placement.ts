@@ -1,4 +1,4 @@
-import { cellsFor } from "./geometry";
+import { cellsFor } from "./geometry.js";
 import type { BoardSize, Placement, PieceTypeId, PlaceResult, Rotation, Vec3 } from "./types";
 
 function key(cell: Vec3): string {

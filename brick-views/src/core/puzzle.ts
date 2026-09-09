@@ -1,7 +1,7 @@
-import { cellKey, cellsFor } from "./geometry";
-import { canPlace } from "./placement";
-import { PIECES } from "./pieces";
-import { projectCells, projectColors, toGrids, viewKey } from "./projection";
+import { cellKey, cellsFor } from "./geometry.js";
+import { canPlace } from "./placement.js";
+import { PIECES } from "./pieces.js";
+import { projectCells, projectColors, toGrids, viewKey } from "./projection.js";
 import type { CellSet, ColorId, DerivedPuzzle, PieceTypeId, Placement, Puzzle, Vec3, ViewName } from "./types";
 
 function emptyTray(): Record<PieceTypeId, number> {
