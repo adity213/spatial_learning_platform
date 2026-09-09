@@ -7,6 +7,18 @@ const VIEW_ORDER: ViewName[] = ['front', 'right', 'top']
 export function ViewsRow() {
   const puzzle = useSession((state) => state.derived.puzzle)
   const lastCheck = useSession((state) => state.lastCheck)
+  const attempts = useSession((state) => state.attempts)
+
+  let regionView: ViewName | undefined
+  let regionBbox: any
+
+  if (attempts >= 3 && lastCheck) {
+    const regionDiag = lastCheck.diagnoses.find((d) => d.code === 'region-mismatch')
+    if (regionDiag && regionDiag.view && regionDiag.region) {
+      regionView = regionDiag.view
+      regionBbox = regionDiag.region
+    }
+  }
 
   return (
     <div className="views-container" role="region" aria-label="Orthographic target views">
@@ -18,6 +30,7 @@ export function ViewsRow() {
           solution={puzzle.solution}
           monochrome={puzzle.monochrome}
           isMatch={lastCheck ? lastCheck.views[name] : null}
+          region={name === regionView ? regionBbox : undefined}
         />
       ))}
     </div>

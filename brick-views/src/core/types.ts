@@ -103,4 +103,6 @@ export interface CheckResult {
   bricksTotal: number;
   /** ranked coarsest-first; empty when solved */
   diagnoses: Diagnosis[];
+  /** A single cell in the child's coordinate space that is incorrect or missing. Used for Rung 5. */
+  mismatchedCell?: Vec3;
 }

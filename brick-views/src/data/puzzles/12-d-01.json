@@ -1,0 +1,14 @@
+{
+  "id": "d-01",
+  "name": "The Tomb",
+  "hint": "A secret lies within.",
+  "board": { "width": 6, "depth": 6, "height": 6 },
+  "solution": [
+    { "instanceId": "1", "typeId": "1x1-red", "rotation": 0, "origin": { "x": 1, "y": 0, "z": 1 } },
+    { "instanceId": "2", "typeId": "1x2-blue", "rotation": 0, "origin": { "x": 1, "y": 0, "z": 2 } },
+    { "instanceId": "3", "typeId": "1x2-yellow", "rotation": 0, "origin": { "x": 2, "y": 0, "z": 1 } },
+    { "instanceId": "4", "typeId": "2x2-green", "rotation": 0, "origin": { "x": 1, "y": 1, "z": 1 } },
+    { "instanceId": "5", "typeId": "1x1-white", "rotation": 0, "origin": { "x": 1, "y": 2, "z": 1 } },
+    { "instanceId": "6", "typeId": "1x1-red", "rotation": 0, "origin": { "x": 2, "y": 2, "z": 2 } }
+  ]
+}

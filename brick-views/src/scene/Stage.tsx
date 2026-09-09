@@ -18,6 +18,9 @@ export function Stage() {
   const monochrome = useSession((state) => !!state.derived.puzzle.monochrome)
   const [activePreset, setActivePreset] = useState<CameraPreset | null>('3d')
   const [highlightedInstanceId, setHighlightedInstanceId] = useState<string | null>(null)
+  
+  const showMismatch = useSession((state) => state.showMismatch)
+  const mismatchedCell = useSession((state) => state.lastCheck?.mismatchedCell)
 
   // Erase-mode hover target reads as "this needs attention". Hint-ladder
   // rung 5 ("Show me") is wired in separately - see ui/HintPanel.tsx.
@@ -58,6 +61,18 @@ export function Stage() {
           placedRef={placedRef}
           onHighlightChange={setHighlightedInstanceId}
         />
+        {showMismatch && mismatchedCell && (
+          <mesh
+            position={[
+              mismatchedCell.x,
+              mismatchedCell.y + 0.5,
+              mismatchedCell.z,
+            ]}
+          >
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#FF4444" transparent opacity={0.6} depthWrite={false} />
+          </mesh>
+        )}
       </Canvas>
 
       <div className="stage-presets" role="toolbar" aria-label="Camera presets">

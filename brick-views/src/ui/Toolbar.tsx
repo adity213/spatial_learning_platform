@@ -1,12 +1,6 @@
 import { useSession } from '../state/session'
 import type { CheckOutcome } from '../core/types'
-
-const CHECK_MESSAGES: Record<CheckOutcome, string> = {
-  empty: 'Place some bricks first.',
-  'views-mismatch': 'Check the views marked in orange.',
-  'hidden-brick': 'The views match, but a brick is missing inside.',
-  solved: "That's the shape.",
-}
+import { HintPanel } from './HintPanel'
 
 export function Toolbar() {
   const mode = useSession((state) => state.mode)
@@ -17,12 +11,6 @@ export function Toolbar() {
   const nextPuzzle = useSession((state) => state.nextPuzzle)
 
   const isSolved = lastCheck?.outcome === 'solved'
-
-  // Center feedback message
-  let feedbackMessage = 'Match all three views.'
-  if (lastCheck) {
-    feedbackMessage = CHECK_MESSAGES[lastCheck.outcome] ?? feedbackMessage
-  }
 
   return (
     <div className="toolbar">
@@ -59,14 +47,9 @@ export function Toolbar() {
         </div>
       </div>
 
-      {/* Center: Feedback text string */}
+      {/* Center: Hint Panel */}
       <div className="toolbar-center">
-        <span
-          className={`feedback-message ${lastCheck ? lastCheck.outcome : ''}`}
-          aria-live="polite"
-        >
-          {feedbackMessage}
-        </span>
+        <HintPanel />
       </div>
 
       {/* Right: Clear board, and Check or Next puzzle */}

@@ -21,7 +21,7 @@ function aligned(placed: Placement[], target: Placement[]) {
     },
     color,
   }));
-  return { placedAligned, targetRaw };
+  return { placedAligned, targetRaw, placedOffset, targetOffset };
 }
 
 export function check(placed: Placement[], target: DerivedPuzzle): CheckResult {
@@ -38,7 +38,7 @@ export function check(placed: Placement[], target: DerivedPuzzle): CheckResult {
     };
   }
 
-  const { placedAligned, targetRaw } = aligned(placed, target.puzzle.solution);
+  const { placedAligned, targetRaw, placedOffset, targetOffset } = aligned(placed, target.puzzle.solution);
   const placedCellKeys = new Set(placedAligned.map((c) => cellKey(c.cell)));
   const targetCellKeys = new Set(targetRaw.map((c) => cellKey(c.cell)));
 
@@ -63,7 +63,8 @@ export function check(placed: Placement[], target: DerivedPuzzle): CheckResult {
       top: setsEqual(placedViews.top, targetViews.top),
     };
     const outcome = views.front && views.right && views.top ? "hidden-brick" : "views-mismatch";
-    return { outcome, views, bricksPlaced, bricksTotal, diagnoses: diagnose(placed, target) };
+    const mismatchedCell = findMismatchedCell(placedAligned, targetRaw, true, placedOffset, targetOffset);
+    return { outcome, views, bricksPlaced, bricksTotal, diagnoses: diagnose(placed, target), mismatchedCell };
   }
 
   // Colour-aware: solved iff the normalised cell→colour maps are equal —
@@ -93,7 +94,46 @@ export function check(placed: Placement[], target: DerivedPuzzle): CheckResult {
     top: mapsEqual(placedViews.top, targetViews.top),
   };
   const outcome = views.front && views.right && views.top ? "hidden-brick" : "views-mismatch";
-  return { outcome, views, bricksPlaced, bricksTotal, diagnoses: diagnose(placed, target) };
+  const mismatchedCell = findMismatchedCell(placedAligned, targetRaw, false, placedOffset, targetOffset);
+  return { outcome, views, bricksPlaced, bricksTotal, diagnoses: diagnose(placed, target), mismatchedCell };
+}
+
+function findMismatchedCell(
+  placedAligned: { cell: Vec3; color: ColorId }[],
+  targetRaw: { cell: Vec3; color: ColorId }[],
+  monochrome: boolean,
+  placedOffset: Vec3,
+  targetOffset: Vec3
+): Vec3 | undefined {
+  const placedMap = new Map(placedAligned.map((c) => [cellKey(c.cell), c.color]));
+  const targetMap = new Map(targetRaw.map((c) => [cellKey(c.cell), c.color]));
+  
+  let mismatchRaw: Vec3 | undefined;
+  
+  for (const t of targetRaw) {
+    const pColor = placedMap.get(cellKey(t.cell));
+    if (!pColor || (!monochrome && pColor !== t.color)) {
+      mismatchRaw = t.cell;
+      break;
+    }
+  }
+  
+  if (!mismatchRaw) {
+    for (const p of placedAligned) {
+      if (!targetMap.has(cellKey(p.cell))) {
+        mismatchRaw = p.cell;
+        break;
+      }
+    }
+  }
+  
+  if (!mismatchRaw) return undefined;
+  
+  return {
+    x: mismatchRaw.x - targetOffset.x + placedOffset.x,
+    y: mismatchRaw.y - targetOffset.y + placedOffset.y,
+    z: mismatchRaw.z - targetOffset.z + placedOffset.z,
+  };
 }
 
 function mapsEqual(a: Map<string, ColorId>, b: Map<string, ColorId>): boolean {

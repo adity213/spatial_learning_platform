@@ -25,6 +25,8 @@ interface Session {
   puzzleIndex: number;
   puzzleCount: number;
   puzzleList: { id: string; name: string }[];
+  attempts: number;
+  showMismatch: boolean;
 
   loadPuzzle(id: string): void;
   selectType(id: PieceTypeId | null): void;
@@ -36,6 +38,7 @@ interface Session {
   dismissFeedback(): void;
   nextPuzzle(): void;
   prevPuzzle(): void;
+  setShowMismatch(): void;
 }
 
 const catalog = loadPuzzles();
@@ -52,6 +55,25 @@ function findPuzzle(id: string) {
   return puzzle;
 }
 
+function getAttempts(puzzleId: string): number {
+  try {
+    const val = sessionStorage.getItem(`attempts-${puzzleId}`);
+    return val ? parseInt(val, 10) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function saveAttempts(puzzleId: string, attempts: number): void {
+  try {
+    if (attempts === 0) {
+      sessionStorage.removeItem(`attempts-${puzzleId}`);
+    } else {
+      sessionStorage.setItem(`attempts-${puzzleId}`, attempts.toString());
+    }
+  } catch {}
+}
+
 const initialDerived = derivePuzzle(firstPuzzle);
 
 export const useSession = create<Session>((set, get) => ({
@@ -66,6 +88,8 @@ export const useSession = create<Session>((set, get) => ({
   puzzleIndex: 0,
   puzzleCount: catalog.length,
   puzzleList: catalog.map((p) => ({ id: p.id, name: p.name })),
+  attempts: getAttempts(firstPuzzle.id),
+  showMismatch: false,
 
   loadPuzzle(id) {
     const puzzle = findPuzzle(id);
@@ -81,6 +105,8 @@ export const useSession = create<Session>((set, get) => ({
       lastReject: null,
       puzzleIndex: indexOf(puzzle.id),
       puzzleCount: catalog.length,
+      attempts: getAttempts(puzzle.id),
+      showMismatch: false,
     });
   },
 
@@ -138,12 +164,32 @@ export const useSession = create<Session>((set, get) => ({
 
   clearBoard() {
     const { derived } = get();
-    set({ placed: [], remaining: { ...derived.tray }, lastCheck: null, lastReject: null });
+    saveAttempts(derived.puzzle.id, 0);
+    set({
+      placed: [],
+      remaining: { ...derived.tray },
+      lastCheck: null,
+      lastReject: null,
+      attempts: 0,
+      showMismatch: false,
+    });
   },
 
   runCheck() {
-    const { placed, derived } = get();
-    set({ lastCheck: check(placed, derived) });
+    const { placed, derived, attempts } = get();
+    const result = check(placed, derived);
+    
+    let nextAttempts = attempts;
+    if (result.outcome !== "empty") {
+      if (result.outcome === "solved") {
+        nextAttempts = 0;
+      } else {
+        nextAttempts = attempts + 1;
+      }
+      saveAttempts(derived.puzzle.id, nextAttempts);
+    }
+    
+    set({ lastCheck: result, attempts: nextAttempts, showMismatch: false });
   },
 
   dismissFeedback() {
@@ -160,5 +206,9 @@ export const useSession = create<Session>((set, get) => ({
     const { puzzleIndex, loadPuzzle } = get();
     const prev = catalog[(puzzleIndex - 1 + catalog.length) % catalog.length];
     if (prev) loadPuzzle(prev.id);
+  },
+
+  setShowMismatch() {
+    set({ showMismatch: true });
   },
 }));

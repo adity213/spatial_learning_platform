@@ -1,0 +1,12 @@
+{
+  "id": "b-01",
+  "name": "Colour Check",
+  "hint": "The shape is simple, but the colors matter.",
+  "board": { "width": 6, "depth": 6, "height": 6 },
+  "solution": [
+    { "instanceId": "1", "typeId": "2x4-red", "rotation": 0, "origin": { "x": 1, "y": 0, "z": 1 } },
+    { "instanceId": "2", "typeId": "2x4-blue", "rotation": 0, "origin": { "x": 1, "y": 1, "z": 1 } },
+    { "instanceId": "3", "typeId": "2x2-red", "rotation": 0, "origin": { "x": 1, "y": 2, "z": 1 } },
+    { "instanceId": "4", "typeId": "2x2-blue", "rotation": 0, "origin": { "x": 1, "y": 3, "z": 1 } }
+  ]
+}
