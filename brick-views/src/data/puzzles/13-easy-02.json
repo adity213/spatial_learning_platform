@@ -1,0 +1,72 @@
+{
+  "id": "easy-02",
+  "name": "Easy 2",
+  "hint": "Count your bricks.",
+  "board": {
+    "width": 8,
+    "depth": 8,
+    "height": 6
+  },
+  "solution": [
+    {
+      "instanceId": "b0",
+      "typeId": "1x2-blue",
+      "rotation": 180,
+      "origin": {
+        "x": 5,
+        "y": 0,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b1",
+      "typeId": "1x2-green",
+      "rotation": 270,
+      "origin": {
+        "x": 4,
+        "y": 0,
+        "z": 4
+      }
+    },
+    {
+      "instanceId": "b2",
+      "typeId": "1x2-red",
+      "rotation": 0,
+      "origin": {
+        "x": 2,
+        "y": 0,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b3",
+      "typeId": "2x6-green",
+      "rotation": 270,
+      "origin": {
+        "x": 0,
+        "y": 0,
+        "z": 1
+      }
+    },
+    {
+      "instanceId": "b4",
+      "typeId": "1x1-red",
+      "rotation": 0,
+      "origin": {
+        "x": 1,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "instanceId": "b5",
+      "typeId": "1x1-blue",
+      "rotation": 270,
+      "origin": {
+        "x": 2,
+        "y": 1,
+        "z": 1
+      }
+    }
+  ]
+}

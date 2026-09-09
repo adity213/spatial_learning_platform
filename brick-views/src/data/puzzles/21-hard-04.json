@@ -1,0 +1,143 @@
+{
+  "id": "hard-04",
+  "name": "Hard 4",
+  "hint": "Trust your deduction.",
+  "board": {
+    "width": 8,
+    "depth": 8,
+    "height": 6
+  },
+  "solution": [
+    {
+      "instanceId": "b0",
+      "typeId": "2x3-blue",
+      "rotation": 0,
+      "origin": {
+        "x": 4,
+        "y": 0,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b1",
+      "typeId": "1x1-white",
+      "rotation": 180,
+      "origin": {
+        "x": 3,
+        "y": 0,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b2",
+      "typeId": "1x1-red",
+      "rotation": 180,
+      "origin": {
+        "x": 0,
+        "y": 0,
+        "z": 2
+      }
+    },
+    {
+      "instanceId": "b3",
+      "typeId": "1x1-green",
+      "rotation": 90,
+      "origin": {
+        "x": 4,
+        "y": 1,
+        "z": 6
+      }
+    },
+    {
+      "instanceId": "b4",
+      "typeId": "2x3-green",
+      "rotation": 0,
+      "origin": {
+        "x": 0,
+        "y": 0,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b5",
+      "typeId": "1x4-yellow",
+      "rotation": 90,
+      "origin": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "instanceId": "b6",
+      "typeId": "1x4-green",
+      "rotation": 180,
+      "origin": {
+        "x": 7,
+        "y": 0,
+        "z": 4
+      }
+    },
+    {
+      "instanceId": "b7",
+      "typeId": "2x4-green",
+      "rotation": 180,
+      "origin": {
+        "x": 4,
+        "y": 0,
+        "z": 1
+      }
+    },
+    {
+      "instanceId": "b8",
+      "typeId": "1x1-yellow",
+      "rotation": 0,
+      "origin": {
+        "x": 3,
+        "y": 0,
+        "z": 2
+      }
+    },
+    {
+      "instanceId": "b9",
+      "typeId": "1x2-yellow",
+      "rotation": 270,
+      "origin": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "instanceId": "b10",
+      "typeId": "1x1-red",
+      "rotation": 180,
+      "origin": {
+        "x": 5,
+        "y": 1,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b11",
+      "typeId": "2x3-yellow",
+      "rotation": 0,
+      "origin": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      }
+    },
+    {
+      "instanceId": "b12",
+      "typeId": "1x1-blue",
+      "rotation": 270,
+      "origin": {
+        "x": 4,
+        "y": 1,
+        "z": 1
+      }
+    }
+  ],
+  "monochrome": true
+}

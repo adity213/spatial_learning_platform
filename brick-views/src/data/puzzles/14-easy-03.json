@@ -1,0 +1,82 @@
+{
+  "id": "easy-03",
+  "name": "Easy 3",
+  "hint": "Look at the colours.",
+  "board": {
+    "width": 8,
+    "depth": 8,
+    "height": 6
+  },
+  "solution": [
+    {
+      "instanceId": "b0",
+      "typeId": "2x4-yellow",
+      "rotation": 270,
+      "origin": {
+        "x": 3,
+        "y": 0,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b1",
+      "typeId": "1x2-green",
+      "rotation": 90,
+      "origin": {
+        "x": 3,
+        "y": 1,
+        "z": 5
+      }
+    },
+    {
+      "instanceId": "b2",
+      "typeId": "1x3-white",
+      "rotation": 90,
+      "origin": {
+        "x": 3,
+        "y": 0,
+        "z": 7
+      }
+    },
+    {
+      "instanceId": "b3",
+      "typeId": "2x4-blue",
+      "rotation": 270,
+      "origin": {
+        "x": 0,
+        "y": 0,
+        "z": 3
+      }
+    },
+    {
+      "instanceId": "b4",
+      "typeId": "2x2-blue",
+      "rotation": 90,
+      "origin": {
+        "x": 6,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "instanceId": "b5",
+      "typeId": "2x4-red",
+      "rotation": 90,
+      "origin": {
+        "x": 4,
+        "y": 0,
+        "z": 3
+      }
+    },
+    {
+      "instanceId": "b6",
+      "typeId": "1x1-white",
+      "rotation": 180,
+      "origin": {
+        "x": 1,
+        "y": 0,
+        "z": 1
+      }
+    }
+  ]
+}
