@@ -15,7 +15,7 @@ function groupBy<T, K>(rows: T[], key: (row: T) => K): Map<K, T[]> {
 }
 
 async function handler(req: Request) {
-  const unauthorized = requireAdmin(req);
+  const unauthorized = await requireAdmin(req);
   if (unauthorized) return unauthorized;
 
   if (req.method !== "GET") {

@@ -75,7 +75,7 @@ async function listWithStats(): Promise<ParticipantStatsRow[]> {
 }
 
 async function handler(req: Request) {
-  const unauthorized = requireAdmin(req);
+  const unauthorized = await requireAdmin(req);
   if (unauthorized) return unauthorized;
 
   if (req.method === "GET") {

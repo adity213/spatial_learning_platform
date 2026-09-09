@@ -57,3 +57,10 @@ export const hintUsages = pgTable('hint_usages', {
 }, (table) => [
   index('hint_usages_session_id_idx').on(table.sessionId),
 ]);
+
+export const admins = pgTable('admins', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  username: text('username').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
