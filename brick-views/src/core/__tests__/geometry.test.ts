@@ -39,17 +39,20 @@ describe("cellsFor", () => {
 describe("originForPivot", () => {
   const pivot = { x: 0, y: 0, z: 0 };
 
-  it("sweeps a 2x4 through all four quadrants around the pivot, returning to start at 360", () => {
-    expect(originForPivot("2x4-yellow", 0, pivot)).toEqual({ x: 0, y: 0, z: 0 });
-    expect(originForPivot("2x4-yellow", 90, pivot)).toEqual({ x: 0, y: 0, z: -2 });
-    expect(originForPivot("2x4-yellow", 180, pivot)).toEqual({ x: -2, y: 0, z: -4 });
-    expect(originForPivot("2x4-yellow", 270, pivot)).toEqual({ x: -4, y: 0, z: 0 });
+  it("pseudo-centers on the mouse pointer (2x4 piece)", () => {
+    // For w=2, d=4, offset is x: -floor((2-1)/2) = 0, z: -floor((4-1)/2) = -1
+    expect(originForPivot("2x4-yellow", 0, pivot)).toEqual({ x: 0, y: 0, z: -1 });
+    // For 90 deg: w=4, d=2, offset is x: -floor((4-1)/2) = -1, z: -floor((2-1)/2) = 0
+    expect(originForPivot("2x4-yellow", 90, pivot)).toEqual({ x: -1, y: 0, z: 0 });
+    // 180 and 270 act identically to 0 and 90
+    expect(originForPivot("2x4-yellow", 180, pivot)).toEqual({ x: 0, y: 0, z: -1 });
+    expect(originForPivot("2x4-yellow", 270, pivot)).toEqual({ x: -1, y: 0, z: 0 });
   });
 
   it("puts each rotation in a different quadrant around the pivot", () => {
     const origins = ([0, 90, 180, 270] as const).map((r) => originForPivot("2x4-yellow", r, pivot));
     const unique = new Set(origins.map((o) => `${o.x},${o.z}`));
-    expect(unique.size).toBe(4);
+    expect(unique.size).toBe(2);
   });
 });
 
