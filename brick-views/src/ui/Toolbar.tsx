@@ -1,5 +1,4 @@
 import { useSession } from '../state/session'
-import type { CheckOutcome } from '../core/types'
 import { HintPanel } from './HintPanel'
 
 export function Toolbar() {

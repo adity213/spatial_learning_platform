@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useSession } from '../state/session'
-import type { CheckOutcome, DiagnosisCode } from '../core/types'
+import type { CheckOutcome, DiagnosisCode, ViewName } from '../core/types'
 
 const STATIC_MESSAGES: Record<DiagnosisCode, string> = {
   'brick-count-low': 'Not enough bricks.',
@@ -48,7 +48,7 @@ export function HintPanel() {
 
   // Rung 2: Attempt 2 -> Dimension of error (first diagnosis)
   if (attempts >= 2) {
-    message = STATIC_MESSAGES[diagnoses[0].code] ?? message
+    message = diagnoses[0] ? (STATIC_MESSAGES[diagnoses[0].code] ?? message) : message
   }
 
   // Rung 3: Attempt 3 -> Region highlight (ViewCard handles overlay)
@@ -65,12 +65,38 @@ export function HintPanel() {
   const handleGetHelp = async () => {
     setLoadingHelp(true)
     try {
-      // Stub for Phase 5
-      setTimeout(() => {
-        setAiHint("Try moving the red block.")
-        setLoadingHelp(false)
-      }, 500)
+      const viewsFailing = (Object.keys(lastCheck.views) as ViewName[]).filter(
+        (v) => !lastCheck.views[v]
+      )
+      
+      const payload = {
+        puzzleHint: derived.puzzle.hint,
+        outcome,
+        viewsFailing,
+        diagnoses,
+        attempt: attempts,
+      }
+
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 2000)
+
+      const res = await fetch('/api/hint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      })
+      clearTimeout(timeoutId)
+
+      if (!res.ok) throw new Error('API failed')
+      const data = await res.json()
+      
+      if (data.sentence) {
+        setAiHint(data.sentence)
+      }
     } catch {
+      // Fallback silently to static string on timeout or error
+    } finally {
       setLoadingHelp(false)
     }
   }
