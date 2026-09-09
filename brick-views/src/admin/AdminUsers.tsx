@@ -51,35 +51,33 @@ export function AdminUsers() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Manage Admin Users</h2>
-      
-      <div style={{ marginTop: '2rem', marginBottom: '2rem', background: '#fff', padding: '1.5rem', borderRadius: '8px', border: '1px solid #ddd' }}>
-        <h3>Create New Admin</h3>
-        {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-        <form onSubmit={handleCreate} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', marginTop: '1rem' }}>
-          <div>
-            <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Username</label>
-            <input 
-              type="text" 
-              value={username} 
-              onChange={(e) => setUsername(e.target.value)} 
+    <div>
+      <h2>Manage admin users</h2>
+
+      <div className="admin-card">
+        <h3>Create new admin</h3>
+        {error && <p className="admin-error">{error}</p>}
+        <form className="admin-form" onSubmit={handleCreate}>
+          <label>
+            Username
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
-              style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
             />
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Password</label>
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
+          </label>
+          <label>
+            Password
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
             />
-          </div>
-          <button type="submit" disabled={isLoading} style={{ padding: '0.5rem 1rem', background: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-            {isLoading ? 'Creating...' : 'Create Admin'}
+          </label>
+          <button type="submit" className="admin-button-primary" disabled={isLoading}>
+            {isLoading ? 'Creating...' : 'Create admin'}
           </button>
         </form>
       </div>
@@ -88,7 +86,7 @@ export function AdminUsers() {
         <thead>
           <tr>
             <th>Username</th>
-            <th>Created At</th>
+            <th>Created at</th>
           </tr>
         </thead>
         <tbody>
@@ -99,7 +97,9 @@ export function AdminUsers() {
             </tr>
           ))}
           {admins.length === 0 && (
-            <tr><td colSpan={2} style={{ textAlign: 'center' }}>No admins created yet.</td></tr>
+            <tr>
+              <td colSpan={2}>No admins created yet.</td>
+            </tr>
           )}
         </tbody>
       </table>

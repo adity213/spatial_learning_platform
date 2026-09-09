@@ -176,7 +176,7 @@ export function ParticipantsTable({ onSelect }: { onSelect: (id: string) => void
           placeholder="Participant name"
           aria-label="Participant name"
         />
-        <button type="submit" disabled={creating || !newName.trim()}>
+        <button type="submit" className="admin-button-primary" disabled={creating || !newName.trim()}>
           {creating ? "Adding..." : "Add participant"}
         </button>
         <button
@@ -206,7 +206,7 @@ export function ParticipantsTable({ onSelect }: { onSelect: (id: string) => void
             aria-label="Participant names, one per line"
             rows={5}
           />
-          <button type="submit" disabled={bulkRunning || !bulkNames.trim()}>
+          <button type="submit" className="admin-button-primary" disabled={bulkRunning || !bulkNames.trim()}>
             {bulkRunning ? "Adding..." : "Add all"}
           </button>
         </form>

@@ -33,13 +33,13 @@ export function AdminApp() {
     setIsAuthenticated(false);
   };
 
-  if (isAuthenticated === null) return <div>Loading...</div>;
+  if (isAuthenticated === null) return <div className="admin-shell">Loading…</div>;
   if (isAuthenticated === false) return <AdminLogin onLoginSuccess={() => setIsAuthenticated(true)} />;
 
   return (
     <div className="admin-shell">
-      <header className="admin-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+      <header className="admin-header">
+        <div className="admin-header-left">
           <h1>Spatial Learning – Admin</h1>
           <nav className="admin-tabs">
             <button
@@ -65,7 +65,7 @@ export function AdminApp() {
             </button>
           </nav>
         </div>
-        <button onClick={handleLogout} style={{ padding: '0.5rem 1rem', cursor: 'pointer', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}>
+        <button type="button" className="admin-secondary-button" onClick={handleLogout}>
           Logout
         </button>
       </header>

@@ -176,7 +176,7 @@ export function PuzzleBuilder({
             {error && <p className="admin-error">{error}</p>}
 
             <div className="admin-editor-actions" style={{ marginTop: '2rem' }}>
-              <button type="submit" disabled={saving}>
+              <button type="submit" className="admin-button-primary" disabled={saving}>
                 {saving ? "Saving..." : editing ? "Save changes" : "Create puzzle"}
               </button>
               <button type="button" className="admin-secondary-button" onClick={onCancel} disabled={saving}>

@@ -89,7 +89,7 @@ function PuzzleEditor({
       {error && <p className="admin-error">{error}</p>}
 
       <div className="admin-editor-actions">
-        <button type="submit" disabled={saving}>
+        <button type="submit" className="admin-button-primary" disabled={saving}>
           {saving ? "Saving..." : "Save"}
         </button>
         <button type="button" className="admin-secondary-button" onClick={onCancel} disabled={saving}>
@@ -148,7 +148,7 @@ export function PuzzlesTable() {
   return (
     <>
     <div className="admin-toolbar">
-      <button type="button" onClick={() => setBuilding("new")}>
+      <button type="button" className="admin-button-primary" onClick={() => setBuilding("new")}>
         New puzzle
       </button>
     </div>

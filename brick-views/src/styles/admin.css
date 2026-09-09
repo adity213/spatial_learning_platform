@@ -14,9 +14,115 @@
   box-sizing: border-box;
 }
 
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.admin-header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
 .admin-header h1 {
   font-size: var(--font-size-lg);
-  margin: 0 0 20px;
+  margin: 0;
+}
+
+.admin-shell h2 {
+  font-size: var(--font-size-lg);
+  margin: 0 0 16px;
+}
+
+.admin-shell h3 {
+  font-size: var(--font-size-md);
+  margin: 0 0 8px;
+}
+
+/* Sensible default for any admin button that doesn't declare a more
+   specific style — keeps stray buttons from falling back to the browser's
+   default grey look next to intentionally-styled ones. */
+button {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--ink);
+  background-color: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--stage);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-button-primary {
+  background-color: var(--filled);
+  color: #FFFFFF;
+  border-color: var(--filled);
+}
+
+.admin-button-primary:hover:not(:disabled) {
+  background-color: var(--ink);
+  border-color: var(--ink);
+}
+
+.admin-card {
+  background-color: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.admin-form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.admin-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+}
+
+.admin-form input {
+  padding: 8px 10px;
+  border: var(--border-rule);
+  border-radius: 6px;
+  font: inherit;
+  color: var(--ink);
+  background-color: var(--sheet);
+}
+
+/* Admin login reuses the participant .login-card/.login-input, but its
+   fields need left-aligned labels instead of the game's centered code entry. */
+.admin-login-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+  text-align: left;
+}
+
+.admin-login-label .login-input {
+  text-align: left;
 }
 
 /* Wide enough for the builder's board-plus-form layout; the puzzles table
@@ -43,21 +149,6 @@
   color: var(--ink);
 }
 
-.admin-add-form button {
-  font-family: var(--font-family);
-  font-weight: var(--font-weight-bold);
-  color: var(--sheet);
-  background-color: var(--filled);
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  cursor: pointer;
-}
-
-.admin-add-form button:disabled {
-  background-color: var(--rule);
-  cursor: not-allowed;
-}
 
 .admin-new-code {
   background-color: var(--sheet);
@@ -225,7 +316,7 @@
 }
 
 .admin-tabs button {
-  padding: 6px 14px;
+  padding: 7px 14px;
   border: var(--border-rule);
   border-radius: var(--radius-sm, 6px);
   background: transparent;
@@ -246,7 +337,7 @@
 }
 
 .admin-secondary-button {
-  padding: 4px 10px;
+  padding: 7px 14px;
   border: var(--border-rule);
   border-radius: var(--radius-sm, 6px);
   background: transparent;
