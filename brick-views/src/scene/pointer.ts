@@ -53,19 +53,22 @@ export function getRaycastCandidate(
 
   raycaster.setFromCamera(ndc, camera)
 
-  // Build mode targets the plate only: which column the pointer is over is a
-  // flat top-down question, and letting a placed brick's raised top face
-  // occlude the ray (it visually overlaps neighboring columns at a shallow
-  // camera angle) previously made hovering an empty column right next to a
-  // brick resolve one level up with nothing under it. Occupancy for that
-  // column comes from `placed` directly instead of from whatever the ray hit.
+  // In build mode, we must intersect both the plate and placed bricks so the user
+  // can point at the top of a placed brick to stack on it.
   if (mode === 'build') {
-    if (!plateMesh) return null
-    const hits = raycaster.intersectObject(plateMesh, true)
+    const targets: THREE.Object3D[] = []
+    if (plateMesh) targets.push(plateMesh)
+    if (placedGroup) targets.push(placedGroup)
+
+    const hits = raycaster.intersectObjects(targets, true)
     if (!hits.length || !hits[0]) return null
 
+    // For placing, we find the (x,z) column that the ray hit, and stack on top of it.
+    // If the ray hit a vertical side face, point.x or point.z will be on a .5 boundary.
+    // In JS, Math.round(0.5) = 1, which correctly pushes the hit into the empty cell in front.
     const x = Math.round(hits[0].point.x)
     const z = Math.round(hits[0].point.z)
+    
     return {
       type: 'plate',
       cell: { x, y: stackHeightAt(placed, x, z), z },
