@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from "react";
-import { fetchPuzzleStats, updatePuzzle, type PuzzleSummary } from "./adminApi";
+import { deletePuzzle, fetchPuzzleStats, updatePuzzle, type PuzzleSummary } from "./adminApi";
 import { PuzzleBuilder } from "./PuzzleBuilder";
 
 function formatSeconds(value: number | null): string {
@@ -107,6 +107,7 @@ export function PuzzlesTable() {
   /** Which puzzle's bricks are open in the 3D builder — or "new" for a blank
    *  board. Separate from editingId, which is the metadata row form. */
   const [building, setBuilding] = useState<PuzzleSummary | "new" | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   function load() {
     fetchPuzzleStats()
@@ -118,6 +119,19 @@ export function PuzzlesTable() {
   }
 
   useEffect(load, []);
+
+  const handleDelete = async (puzzle: PuzzleSummary) => {
+    if (!window.confirm(`Delete "${puzzle.name}"? This removes all recorded play history for it too.`)) return;
+    setDeletingId(puzzle.id);
+    try {
+      await deletePuzzle(puzzle.id);
+      load();
+    } catch {
+      setError("Could not delete puzzle.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (error) {
     return (
@@ -193,6 +207,15 @@ export function PuzzlesTable() {
                 </button>
                 <button type="button" className="admin-secondary-button" onClick={() => setBuilding(puzzle)}>
                   Bricks
+                </button>
+                <button
+                  type="button"
+                  className="admin-secondary-button"
+                  onClick={() => handleDelete(puzzle)}
+                  disabled={deletingId === puzzle.id}
+                  aria-label={`Delete ${puzzle.name}`}
+                >
+                  {deletingId === puzzle.id ? "Deleting..." : "Delete"}
                 </button>
               </td>
             </tr>

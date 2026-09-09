@@ -1,6 +1,6 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { db } from "../../src/db/index.js";
-import { puzzles } from "../../src/db/schema.js";
+import { attempts, hintUsages, puzzles, sessions } from "../../src/db/schema.js";
 import { requireAdmin } from "./_auth.js";
 import { validatePuzzle, validateColourRules } from "../../src/core/puzzle.js";
 import type { Puzzle } from "../../src/core/types.js";
@@ -257,6 +257,35 @@ async function handler(req: Request) {
     });
 
     return Response.json({ success: true, id });
+  }
+
+  if (req.method === "DELETE") {
+    const id = new URL(req.url).searchParams.get("id");
+    if (!id) {
+      return Response.json({ error: "Missing id" }, { status: 400 });
+    }
+
+    // No ON DELETE CASCADE in the schema, and the neon-http driver doesn't
+    // support multi-statement transactions — delete children first, in FK
+    // order, so a puzzle with play history doesn't hit a foreign key error.
+    const theirSessions = await db
+      .select({ id: sessions.id })
+      .from(sessions)
+      .where(eq(sessions.puzzleId, id));
+    const sessionIds = theirSessions.map((s) => s.id);
+
+    if (sessionIds.length > 0) {
+      await db.delete(hintUsages).where(inArray(hintUsages.sessionId, sessionIds));
+      await db.delete(attempts).where(inArray(attempts.sessionId, sessionIds));
+      await db.delete(sessions).where(inArray(sessions.id, sessionIds));
+    }
+
+    const [deleted] = await db.delete(puzzles).where(eq(puzzles.id, id)).returning({ id: puzzles.id });
+    if (!deleted) {
+      return Response.json({ error: "Puzzle not found" }, { status: 404 });
+    }
+
+    return Response.json({ success: true });
   }
 
   return new Response("Method not allowed", { status: 405 });

@@ -152,3 +152,7 @@ export function updatePuzzle(id: string, changes: PuzzleUpdate): Promise<{ succe
     body: JSON.stringify({ id, ...changes }),
   });
 }
+
+export function deletePuzzle(id: string): Promise<{ success: true }> {
+  return adminFetch(`/api/admin/puzzles?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+}
