@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import * as dotenv from 'dotenv';
-import * as schema from './schema';
+import * as schema from './schema.js';
 
 // Vercel injects DATABASE_URL in deployed environments, but `vercel dev` does
 // not reliably inject it when it loads a function module locally — so read
