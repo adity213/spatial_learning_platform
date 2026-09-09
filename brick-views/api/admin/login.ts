@@ -4,7 +4,11 @@ import { admins } from '../../src/db/schema.js';
 import * as bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 
-export async function POST(req: Request) {
+async function handler(req: Request) {
+  if (req.method !== "POST") {
+    return Response.json({ error: "Method not allowed" }, { status: 405 });
+  }
+
   try {
     const { username, password } = await req.json();
 
@@ -60,4 +64,4 @@ export async function POST(req: Request) {
   }
 }
 
-export const GET = () => Response.json({ error: "Method not allowed" }, { status: 405 });
+export default { fetch: handler };

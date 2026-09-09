@@ -1,4 +1,8 @@
-export async function POST() {
+async function handler(req: Request) {
+  if (req.method !== "POST") {
+    return Response.json({ error: "Method not allowed" }, { status: 405 });
+  }
+
   return Response.json(
     { success: true },
     {
@@ -10,4 +14,4 @@ export async function POST() {
   );
 }
 
-export const GET = () => Response.json({ error: "Method not allowed" }, { status: 405 });
+export default { fetch: handler };
