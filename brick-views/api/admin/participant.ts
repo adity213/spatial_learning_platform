@@ -1,7 +1,7 @@
 import { eq, inArray } from "drizzle-orm";
-import { db } from "../../src/db";
-import { participants, sessions, attempts, hintUsages, puzzles } from "../../src/db/schema";
-import { requireAdmin } from "./_auth";
+import { db } from "../../src/db/index.js";
+import { participants, sessions, attempts, hintUsages, puzzles } from "../../src/db/schema.js";
+import { requireAdmin } from "./_auth.js";
 
 function groupBy<T, K>(rows: T[], key: (row: T) => K): Map<K, T[]> {
   const map = new Map<K, T[]>();

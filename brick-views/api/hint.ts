@@ -1,7 +1,7 @@
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
-import { db } from "../src/db";
-import { hintUsages } from "../src/db/schema";
+import { db } from "../src/db/index.js";
+import { hintUsages } from "../src/db/schema.js";
 
 const SYSTEM_PROMPT = `You are providing hints for a spatial learning puzzle game for 7-year-olds.
 You will receive a JSON payload describing what the child got wrong.

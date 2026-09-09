@@ -1,7 +1,7 @@
 import { asc, eq } from "drizzle-orm";
-import { db } from "../src/db";
-import { puzzles } from "../src/db/schema";
-import type { Puzzle } from "../src/core/types";
+import { db } from "../src/db/index.js";
+import { puzzles } from "../src/db/schema.js";
+import type { Puzzle } from "../src/core/types.js";
 
 /** Public catalogue for the participant app. Active puzzles only, in
  *  progression order.

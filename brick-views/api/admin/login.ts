@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../../src/db';
-import { admins } from '../../src/db/schema';
+import { db } from '../../src/db/index.js';
+import { admins } from '../../src/db/schema.js';
 import * as bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 

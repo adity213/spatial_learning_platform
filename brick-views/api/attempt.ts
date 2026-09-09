@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
-import { db } from "../src/db";
-import { attempts, sessions } from "../src/db/schema";
+import { db } from "../src/db/index.js";
+import { attempts, sessions } from "../src/db/schema.js";
 
 async function handler(req: Request) {
   if (req.method !== "POST") {

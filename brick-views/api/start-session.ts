@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "../src/db";
-import { participants, sessions } from "../src/db/schema";
+import { db } from "../src/db/index.js";
+import { participants, sessions } from "../src/db/schema.js";
 
 // NOTE: this is a Web-standard handler (Request in, Response out), which is
 // what `export default { fetch }` opts into on Vercel's Node runtime. Do not

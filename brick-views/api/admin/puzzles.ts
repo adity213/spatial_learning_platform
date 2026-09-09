@@ -1,9 +1,9 @@
 import { eq, sql } from "drizzle-orm";
-import { db } from "../../src/db";
-import { puzzles } from "../../src/db/schema";
-import { requireAdmin } from "./_auth";
-import { validatePuzzle, validateColourRules } from "../../src/core/puzzle";
-import type { Puzzle } from "../../src/core/types";
+import { db } from "../../src/db/index.js";
+import { puzzles } from "../../src/db/schema.js";
+import { requireAdmin } from "./_auth.js";
+import { validatePuzzle, validateColourRules } from "../../src/core/puzzle.js";
+import type { Puzzle } from "../../src/core/types.js";
 
 /** Runs the same two validators the puzzle set is held to: placement legality
  *  (nothing floating, overlapping or out of bounds) and colour fairness

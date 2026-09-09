@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
-import { db } from "../../src/db";
-import { participants } from "../../src/db/schema";
-import { requireAdmin } from "./_auth";
+import { db } from "../../src/db/index.js";
+import { participants } from "../../src/db/schema.js";
+import { requireAdmin } from "./_auth.js";
 
 // Excludes visually ambiguous characters (0/O, 1/I/L) so a code is easy to
 // read off a screen and type back in.
