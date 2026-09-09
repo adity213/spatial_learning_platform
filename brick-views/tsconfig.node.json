@@ -2,12 +2,19 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "es2023",
-    "lib": ["ES2023"],
-    "types": ["node"],
+    // DOM is here for the Web-standard Request/Response the api/ handlers are
+    // written against, not for browser code — nothing in this project runs in
+    // both places.
+    "lib": ["ES2023", "DOM"],
+    // vite/client is needed because scripts/ transitively imports src/core,
+    // which uses import.meta.glob to load the bundled puzzle JSON.
+    "types": ["node", "vite/client"],
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "module": "nodenext",
+    /* Bundler mode — api/ is bundled by Vercel and scripts run through tsx,
+       so neither resolves imports by Node's ESM extension rules. */
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -19,5 +26,8 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  // Everything that runs in Node rather than the browser. api/ and src/db were
+  // previously in no project at all, so `npm run build` typechecked none of the
+  // backend — a broken handler could pass a green build.
+  "include": ["vite.config.ts", "drizzle.config.ts", "api", "scripts", "src/db"]
 }

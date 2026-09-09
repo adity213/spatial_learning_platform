@@ -24,6 +24,7 @@ export function HintPanel() {
   const attempts = useSession((state) => state.attempts)
   const lastCheck = useSession((state) => state.lastCheck)
   const derived = useSession((state) => state.derived)
+  const currentSessionId = useSession((state) => state.currentSessionId)
   
   const [loadingHelp, setLoadingHelp] = useState(false)
   const [aiHint, setAiHint] = useState<string | null>(null)
@@ -75,6 +76,8 @@ export function HintPanel() {
         viewsFailing,
         diagnoses,
         attempt: attempts,
+        sessionId: currentSessionId,
+        attemptNumber: attempts,
       }
 
       const controller = new AbortController()

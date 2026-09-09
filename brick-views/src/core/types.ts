@@ -35,6 +35,9 @@ export interface Puzzle {
   solution: Placement[];
   /** true → every brick renders one neutral grey; colour is never graded. */
   monochrome?: boolean;
+  /** Optional countdown shown to the participant. Set per puzzle from the
+   *  admin panel; stored in its own DB column, merged in by /api/puzzles. */
+  timeLimitSeconds?: number;
 }
 
 /** "x,y,z" keys */

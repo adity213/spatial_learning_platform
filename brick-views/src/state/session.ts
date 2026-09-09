@@ -1,13 +1,15 @@
 import { create } from "zustand";
 import { brickAtCell } from "../core/geometry";
 import { canPlace, canRemove } from "../core/placement";
-import { derivePuzzle, loadPuzzles } from "../core/puzzle";
+import { derivePuzzle } from "../core/puzzle";
+import { getCatalog } from "../core/catalog";
 import { check } from "../core/check";
 import type {
   CheckResult,
   DerivedPuzzle,
   PieceTypeId,
   Placement,
+  Puzzle,
   RejectReason,
   Rotation,
   Vec3,
@@ -28,6 +30,15 @@ interface Session {
   attempts: number;
   showMismatch: boolean;
 
+  // Participant/telemetry state. `accessCode` is kept in memory (never
+  // persisted) so a new backend Session row can be opened each time the
+  // puzzle changes, without asking the participant to re-enter their code.
+  accessCode: string | null;
+  participantName: string | null;
+  currentSessionId: string | null;
+  authLoading: boolean;
+  authError: string | null;
+
   loadPuzzle(id: string): void;
   selectType(id: PieceTypeId | null): void;
   rotateCW(): void;
@@ -39,9 +50,38 @@ interface Session {
   nextPuzzle(): void;
   prevPuzzle(): void;
   setShowMismatch(): void;
+  login(accessCode: string): Promise<void>;
+  startBuilder(puzzle: Puzzle): void;
 }
 
-const catalog = loadPuzzles();
+/** Authoring tray size. A puzzle's normal tray is exactly its solution's
+ *  tally, which is right for a child and useless for designing — the author
+ *  needs bricks that aren't in the solution yet. */
+const BUILDER_TRAY = 99;
+
+/** Opens a backend Session row for (accessCode, puzzleId). Returns null on
+ *  any failure (bad code, network error) — callers decide how to react. */
+async function requestSession(
+  accessCode: string,
+  puzzleId: string
+): Promise<{ sessionId: string; participantName: string } | null> {
+  try {
+    const res = await fetch("/api/start-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accessCode, puzzleId }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return { sessionId: data.sessionId, participantName: data.participantName };
+  } catch {
+    return null;
+  }
+}
+
+// Read once at import. main.tsx installs the fetched catalogue before it
+// imports App, so this is already the live list by the time it runs.
+const catalog = getCatalog();
 const firstPuzzle = catalog[0];
 if (!firstPuzzle) throw new Error("No puzzles found under src/data/puzzles.");
 
@@ -91,6 +131,12 @@ export const useSession = create<Session>((set, get) => ({
   attempts: getAttempts(firstPuzzle.id),
   showMismatch: false,
 
+  accessCode: null,
+  participantName: null,
+  currentSessionId: null,
+  authLoading: false,
+  authError: null,
+
   loadPuzzle(id) {
     const puzzle = findPuzzle(id);
     const derived = derivePuzzle(puzzle);
@@ -107,7 +153,20 @@ export const useSession = create<Session>((set, get) => ({
       puzzleCount: catalog.length,
       attempts: getAttempts(puzzle.id),
       showMismatch: false,
+      // No attempts get logged until the new puzzle's session resolves below.
+      currentSessionId: null,
     });
+
+    const { accessCode } = get();
+    if (accessCode) {
+      requestSession(accessCode, puzzle.id).then((result) => {
+        // The participant may have switched puzzles again before this
+        // resolved — don't let a stale response overwrite the current one.
+        if (result && get().derived.puzzle.id === puzzle.id) {
+          set({ currentSessionId: result.sessionId });
+        }
+      });
+    }
   },
 
   selectType(id) {
@@ -176,19 +235,35 @@ export const useSession = create<Session>((set, get) => ({
   },
 
   runCheck() {
-    const { placed, derived, attempts } = get();
+    const { placed, derived, attempts, currentSessionId } = get();
     const result = check(placed, derived);
-    
+
     let nextAttempts = attempts;
     if (result.outcome !== "empty") {
-      if (result.outcome === "solved") {
-        nextAttempts = 0;
-      } else {
-        nextAttempts = attempts + 1;
-      }
+      // `attemptNumber` is the Nth check click on this puzzle, sent to the
+      // backend as-is. `nextAttempts` is the local hint-ladder counter,
+      // which resets to 0 on solve — the two diverge only on that outcome.
+      const attemptNumber = attempts + 1;
+      nextAttempts = result.outcome === "solved" ? 0 : attemptNumber;
       saveAttempts(derived.puzzle.id, nextAttempts);
+
+      if (currentSessionId) {
+        fetch("/api/attempt", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sessionId: currentSessionId,
+            boardState: placed,
+            isCorrect: result.outcome === "solved",
+            attemptNumber,
+            diagnoses: result.diagnoses,
+          }),
+        }).catch(() => {
+          // Telemetry only — a dropped attempt log must never block play.
+        });
+      }
     }
-    
+
     set({ lastCheck: result, attempts: nextAttempts, showMismatch: false });
   },
 
@@ -210,5 +285,52 @@ export const useSession = create<Session>((set, get) => ({
 
   setShowMismatch() {
     set({ showMismatch: true });
+  },
+
+  /** Loads a puzzle into the store for authoring rather than playing: the
+   *  solution starts on the board (so an existing puzzle can be tweaked) and
+   *  the tray is effectively unlimited. Everything else — placement legality,
+   *  rotation, erase mode, the 3D scene — is the child's board unchanged,
+   *  which is the point: you author in exactly what they'll see. */
+  startBuilder(puzzle) {
+    const derived = derivePuzzle(puzzle);
+    const remaining = { ...derived.tray };
+    for (const typeId of Object.keys(remaining) as PieceTypeId[]) {
+      remaining[typeId] = BUILDER_TRAY;
+    }
+
+    set({
+      derived,
+      placed: puzzle.solution,
+      remaining,
+      selectedType: null,
+      rotation: 0,
+      mode: "build",
+      lastCheck: null,
+      lastReject: null,
+      showMismatch: false,
+      attempts: 0,
+      // Authoring must never write telemetry as though a child played.
+      currentSessionId: null,
+    });
+  },
+
+  async login(accessCode) {
+    set({ authLoading: true, authError: null });
+    const puzzleId = get().derived.puzzle.id;
+    const result = await requestSession(accessCode, puzzleId);
+
+    if (!result) {
+      set({ authLoading: false, authError: "That code didn't work. Check it and try again." });
+      return;
+    }
+
+    set({
+      accessCode,
+      participantName: result.participantName,
+      currentSessionId: result.sessionId,
+      authLoading: false,
+      authError: null,
+    });
   },
 }));

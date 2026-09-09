@@ -53,15 +53,9 @@ export function validatePuzzle(puzzle: Puzzle): void {
   }
 }
 
-export function loadPuzzles(): Puzzle[] {
-  const puzzleModules = import.meta.glob<Puzzle>("../data/puzzles/*.json", {
-    eager: true,
-    import: "default",
-  });
-  return Object.keys(puzzleModules)
-    .sort()
-    .map((path) => puzzleModules[path]!);
-}
+// The catalogue (loadPuzzles / getCatalog / fetchCatalog / setCatalog) lives in
+// ./catalog.ts — it uses Vite-only syntax, and api/ imports this file for the
+// validators below.
 
 const VIEWS: ViewName[] = ["front", "right", "top"];
 

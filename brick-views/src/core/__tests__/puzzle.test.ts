@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { derivePuzzle, loadPuzzles, validatePuzzle } from "../puzzle";
+import { derivePuzzle, validatePuzzle } from "../puzzle";
+import { loadPuzzles } from "../catalog";
 import type { Puzzle } from "../types";
 import fixtureStep01 from "./fixtures/step-01.json";
 

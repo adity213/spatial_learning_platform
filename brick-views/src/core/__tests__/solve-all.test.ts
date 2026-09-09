@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { useSession } from "../../state/session";
-import { loadPuzzles } from "../puzzle";
+import { loadPuzzles } from "../catalog";
 import type { PieceTypeId } from "../types";
 
 describe("solve-all: every puzzle solves through store actions alone", () => {

@@ -530,8 +530,96 @@ html, body {
   pointer-events: none;
 }
 
+/* Login gate */
+.login-screen {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--desk);
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  width: 320px;
+  padding: 32px;
+  background-color: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+}
+
+.login-title {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--ink);
+  text-align: center;
+}
+
+.login-input {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  color: var(--ink);
+  background-color: var(--stage);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.login-button {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--sheet);
+  background-color: var(--filled);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: var(--ink);
+}
+
+.login-button:disabled {
+  background-color: var(--rule);
+  cursor: not-allowed;
+}
+
+.login-error {
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--miss);
+  text-align: center;
+}
+
 /* Universal Focus Ring */
 :focus-visible {
   outline: var(--focus-ring);
   outline-offset: 1px;
+}
+
+/* Per-puzzle countdown (only rendered when a time limit is set in admin) */
+.countdown {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+}
+
+.countdown.is-low {
+  color: var(--filled);
+  font-weight: 600;
+}
+
+.countdown.is-up {
+  color: var(--quiet);
+  font-weight: 600;
 }

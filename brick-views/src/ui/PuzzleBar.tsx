@@ -1,4 +1,5 @@
 import { useSession } from '../state/session'
+import { Countdown } from './Countdown'
 
 export function PuzzleBar() {
   const puzzleId = useSession((state) => state.derived.puzzle.id)
@@ -17,6 +18,7 @@ export function PuzzleBar() {
         <span className="puzzle-counter">
           Puzzle {puzzleIndex + 1} of {puzzleCount}
         </span>
+        <Countdown key={puzzleId} />
       </div>
 
       <div className="puzzle-nav" role="group" aria-label="Change puzzle">

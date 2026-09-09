@@ -1,6 +1,6 @@
 import type { ColorId, PieceType, PieceTypeId, ShapeId } from "./types";
 
-const SHAPES: Record<ShapeId, { width: number; depth: number }> = {
+export const SHAPES: Record<ShapeId, { width: number; depth: number }> = {
   "1x1": { width: 1, depth: 1 },
   "1x2": { width: 1, depth: 2 },
   "1x3": { width: 1, depth: 3 },
@@ -30,7 +30,7 @@ function capitalize(s: string): string {
   return s[0]!.toUpperCase() + s.slice(1);
 }
 
-function shapeLabel(shape: ShapeId): string {
+export function shapeLabel(shape: ShapeId): string {
   const { width, depth } = SHAPES[shape];
   return `${width} × ${depth}`;
 }

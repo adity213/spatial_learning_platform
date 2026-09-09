@@ -39,17 +39,14 @@ function tryGeneratePuzzle(id: string, name: string, hint: string, targetBricks:
     const typeId = randElement(SHAPES)
     const rotation = randElement(ROTATIONS)
     
-    // Choose x, y, z
+    // Choose x, z — the y level is found by the search below
     const x = randInt(0, board.width)
     const z = randInt(0, board.depth)
-    let y = 0
-    // Try to place it at some y level
     for (let h = board.height - 1; h >= 0; h--) {
       const origin = { x, y: h, z }
       const tray = { [typeId]: TRAY_LIMIT } 
       const res = canPlace(solution, board, tray as any, typeId, rotation, origin)
       if (res.ok) {
-        y = h
         solution.push({
           instanceId: `b${solution.length}`,
           typeId,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { derivePuzzle, loadPuzzles, validateColourRules, validatePuzzle } from "../puzzle";
+import { derivePuzzle, validateColourRules, validatePuzzle } from "../puzzle";
+import { loadPuzzles } from "../catalog";
 
 describe("the puzzle set", () => {
   it("has at least the tutorial six", () => {

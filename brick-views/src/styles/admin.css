@@ -1,0 +1,381 @@
+@import './tokens.css';
+
+.admin-shell {
+  /* global.css sets `body { overflow: hidden }` for the game's fixed 3D stage.
+     The dashboard is a long document, so it scrolls itself rather than relying
+     on overriding that rule — which would depend on stylesheet order. */
+  height: 100vh;
+  overflow-y: auto;
+  background-color: var(--desk);
+  color: var(--ink);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.admin-header h1 {
+  font-size: var(--font-size-lg);
+  margin: 0 0 20px;
+}
+
+/* Wide enough for the builder's board-plus-form layout; the puzzles table
+   scrolls sideways rather than pushing its action column off-screen. */
+.admin-main {
+  max-width: 1280px;
+  overflow-x: auto;
+}
+
+.admin-add-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.admin-add-form input {
+  flex: 1;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background-color: var(--sheet);
+  color: var(--ink);
+}
+
+.admin-add-form button {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  color: var(--sheet);
+  background-color: var(--filled);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.admin-add-form button:disabled {
+  background-color: var(--rule);
+  cursor: not-allowed;
+}
+
+.admin-new-code {
+  background-color: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: var(--border-rule);
+}
+
+.admin-table th {
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+  font-weight: var(--font-weight-bold);
+}
+
+.admin-row {
+  cursor: pointer;
+}
+
+.admin-row:hover {
+  background-color: var(--stage);
+}
+
+.admin-error {
+  color: var(--miss);
+}
+
+.admin-back-button {
+  background: none;
+  border: none;
+  color: var(--filled);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.admin-access-code {
+  color: var(--quiet);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-base);
+}
+
+.admin-session {
+  background-color: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.admin-session h3 {
+  margin: 0 0 4px;
+}
+
+.admin-session-meta {
+  color: var(--quiet);
+  font-size: var(--font-size-sm);
+  margin: 0 0 12px;
+}
+
+.admin-badge {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.admin-badge.solved {
+  color: var(--match);
+  background-color: color-mix(in srgb, var(--match) 15%, transparent);
+}
+
+.admin-badge.in-progress {
+  color: var(--quiet);
+  background-color: var(--stage);
+}
+
+.admin-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-timeline-event {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: var(--border-rule);
+  font-size: var(--font-size-sm);
+}
+
+.admin-timeline-event:last-child {
+  border-bottom: none;
+}
+
+.admin-timeline-event.hint {
+  color: var(--filled);
+}
+
+.admin-timeline-event time {
+  color: var(--quiet);
+  white-space: nowrap;
+}
+
+/* Tabs */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.admin-tabs button {
+  padding: 6px 14px;
+  border: var(--border-rule);
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+}
+
+.admin-tabs button.active {
+  background-color: var(--stage);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Puzzles table */
+.admin-row-inactive {
+  opacity: 0.55;
+}
+
+.admin-secondary-button {
+  padding: 4px 10px;
+  border: var(--border-rule);
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+}
+
+.admin-puzzle-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background-color: var(--stage);
+  border-radius: var(--radius-sm, 6px);
+}
+
+.admin-puzzle-editor label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+}
+
+.admin-puzzle-editor input[type="text"],
+.admin-puzzle-editor input[type="number"],
+.admin-puzzle-editor input:not([type]) {
+  padding: 6px 8px;
+  border: var(--border-rule);
+  border-radius: var(--radius-sm, 6px);
+  font: inherit;
+  color: var(--ink);
+  background-color: var(--paper, #fff);
+}
+
+.admin-puzzle-editor .admin-checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.admin-editor-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* Puzzle builder: 3D board beside the metadata form */
+.admin-toolbar {
+  margin-bottom: 12px;
+}
+
+.admin-row-actions {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.builder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* The scene sizes itself from its container, so this has to be a real height
+   rather than auto — otherwise the canvas collapses to nothing. */
+.builder-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 520px;
+}
+
+.builder-stage .stage-container {
+  height: 420px;
+  background-color: var(--stage);
+  border-radius: var(--radius-sm, 6px);
+}
+
+.builder-scene-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+}
+
+.builder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background-color: var(--stage);
+  border-radius: var(--radius-sm, 6px);
+}
+
+.builder-form h3 {
+  margin: 0;
+}
+
+.builder-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+}
+
+.builder-form input {
+  padding: 6px 8px;
+  border: var(--border-rule);
+  border-radius: var(--radius-sm, 6px);
+  font: inherit;
+  color: var(--ink);
+  background-color: var(--paper, #fff);
+}
+
+.builder-board {
+  display: flex;
+  gap: 8px;
+  border: var(--border-rule);
+  border-radius: var(--radius-sm, 6px);
+  padding: 8px;
+}
+
+.builder-board legend {
+  font-size: var(--font-size-sm);
+  color: var(--quiet);
+}
+
+.builder-board label {
+  flex: 1;
+  text-transform: capitalize;
+}
+
+/* BuilderTray's size level — the colour level below it reuses .tray-item
+   from global.css unchanged (it's the same TrayItem the participant uses). */
+.tray-size-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 12px;
+}
+
+.tray-size-button {
+  background-color: var(--sheet);
+  color: var(--ink);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.tray-size-button:hover {
+  background-color: var(--stage);
+}
+
+.tray-size-button.active {
+  background-color: var(--stage);
+  outline: 2px solid var(--ink);
+  outline-offset: -1px;
+}

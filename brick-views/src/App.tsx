@@ -7,8 +7,11 @@ import { Stage } from './scene/Stage'
 import { ViewsRow } from './ui/ViewsRow'
 import { Toolbar } from './ui/Toolbar'
 import { Feedback } from './ui/Feedback'
+import { Login } from './ui/Login'
 
 export default function App() {
+  const participantName = useSession((state) => state.participantName)
+
   const [isSupportedScreen, setIsSupportedScreen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 1024
@@ -72,6 +75,10 @@ export default function App() {
         Open this on a larger screen.
       </div>
     )
+  }
+
+  if (!participantName) {
+    return <Login />
   }
 
   return (
